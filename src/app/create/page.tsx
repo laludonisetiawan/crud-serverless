@@ -4,29 +4,55 @@ import React, { useState } from 'react';
 const Page = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
-  const handlesubmit = (e: any) => {
+  const handlesubmit = async (e: any) => {
     e.preventDefault();
-    router.push('/')
+
+    setIsLoading(true);
+
+    await fetch('/api/post', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title,
+        content,
+      }),
+    })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+    setIsLoading(false);
+    router.push('/');
   };
   return (
-    <form className="w-[500px] mx-auto pt-20 flex flex-col gap-2 " onSubmit={handlesubmit}>
+    <form
+      className="w-[500px] mx-auto pt-20 flex flex-col gap-2 "
+      onSubmit={handlesubmit}
+    >
       <input
         type="text"
-        placeholder='Masukkan Judul'
+        placeholder="Masukkan Judul"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        className='w-full border p-2 rounded-md '
+        className="w-full border p-2 rounded-md "
       />
       <input
         type="text"
-        placeholder='Masukkan Konten'
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        className='w-full border p-2 rounded-md '
+        placeholder="Masukkan Konten"
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
+        className="w-full border p-2 rounded-md "
       />
-      <button>Submit </button>
+      <button disabled={isLoading}>
+        {isLoading ? 'Loading ...' : 'Submit'}{' '}
+      </button>
     </form>
   );
 };
