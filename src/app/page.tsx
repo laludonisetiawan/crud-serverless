@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Item from './item';
 const getPosts = async () => {
   const res = await fetch(process.env.BASE_URL + '/api/post', {
     next: { revalidate: 0 },
@@ -20,19 +21,7 @@ const page = async () => {
       </Link>
       <div className="flex flex-col mt-8 gap-4  ">
         {posts.posts.map((post: any, index: number) => (
-          <div key={index} className="border runded-md p-4 flex flex-col">
-            <h2 className="text-sm">ID {post.id}</h2>
-            <h1>{post.title}</h1>
-            <p>{post.content}</p>
-            <div className="inline-flex mt-4 gap-4">
-              <button className="relative text-xs hover:text-zinc-800 font-bold">
-                Update
-              </button>
-              <button className=" text-xs text-red-500 hover:text-red-400 font-bold">
-                Delete
-              </button>
-            </div>
-          </div>
+          <Item key={index} post={post} />
         ))}
       </div>
     </div>
